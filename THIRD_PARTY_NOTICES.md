@@ -29,4 +29,4 @@ The build uses PyInstaller. PyInstaller is a build tool and is not a runtime dep
 
 The `python-kasa` dependency is GPL-3.0-or-later. Tapo Deck is consequently released under GPL-3.0-or-later. See `LICENSE` for the full license text.
 
-These notices describe the versions used for release 0.2.16. Rebuilding with newer dependency versions may change the applicable notices.
+These notices describe the versions used for release 0.2.17.2. Rebuilding with newer dependency versions may change the applicable notices.

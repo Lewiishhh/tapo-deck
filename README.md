@@ -2,9 +2,11 @@
 
 **Control TP-Link Tapo smart bulbs from Elgato Stream Deck, directly over your home network.**
 
-Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source remains available here. The v0.2.18 standalone installer has been withdrawn while we investigate a Microsoft Defender detection; do not run copies of that build.
+Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source is published here, and the current standalone plugin installer is included under [`releases/`](releases/TapoDeck-0.2.17.2.streamDeckPlugin).
 
-> **Installer withdrawn:** Do not install v0.2.18. No standalone installer is currently provided.
+> **Current release: 0.2.17.2** — [Download the Stream Deck installer](releases/TapoDeck-0.2.17.2.streamDeckPlugin)
+
+> **Security notice:** The v0.2.18 installer was withdrawn after Microsoft Defender detected it. Do not install or run any copy of v0.2.18.
 
 ## What it can do
 
@@ -12,9 +14,12 @@ Tapo Deck is a Windows Stream Deck plugin with its local control engine included
 - Sign in locally and save credentials encrypted for your Windows account.
 - Configure each key to control one or more selected bulbs.
 - Create keys for on, off, toggle, brightness, white temperature, and color.
-- Set brightness values from 1% to 100%, choose a color temperature, or use a color preset/custom color. Color actions change the color while preserving each bulb's current brightness.
-- Use the bundled local setup page to discover lights, check their status, and create or manage presets.
+- Set brightness values from 1% to 100%, choose a color temperature, or use a color preset/custom color.
+- Color keys change hue and saturation while preserving each bulb's current brightness.
+- Use the bundled local setup page to sign in, find lights, and view their reachability.
 - Keep each key's device selection and settings with that key, including its title in Stream Deck.
+
+The local setup page is for signing in or removing the saved sign-in, finding Tapo lights, and reading the About and security information. Create and customize controls in Stream Deck's key settings.
 
 The Stream Deck plugin starts the bundled engine only when needed. The engine stops when the plugin closes, listens on this PC's loopback interface, and uses a local authorization token for its API.
 
@@ -36,6 +41,7 @@ For the prebuilt plugin:
 - Elgato Stream Deck software **7.1 or later**. This plugin uses the Node.js 24 runtime; Elgato lists that runtime starting with Stream Deck 7.1.
 - A Stream Deck with keypad keys.
 - Compatible Tapo bulbs configured in the official Tapo app and reachable from the same local network as the PC. Enable Third-Party Compatibility in the Tapo app if your bulb/app requires it.
+- Bulbs must be **switched on at the wall switch** while discovering them and signing in locally.
 
 The current build was tested by the project author with two Tapo L530B (EU) bulbs, hardware revision 3.0, firmware 1.4.4 Build 260716. Other python-kasa-supported bulbs may work, but have not all been tested.
 
@@ -43,13 +49,18 @@ You do **not** need to install Python, Node.js, or a separate Tapo Deck desktop 
 
 ## Install
 
-The v0.2.18 installer was withdrawn after Microsoft Defender detected it. Do not run any copy of that build. No standalone installer is currently available; install instructions will return only after a new build has been investigated and verified.
+1. Add and finish setting up each bulb in the official Tapo phone app. Switch the bulbs on at their wall switches and connect them and the PC to the same Wi-Fi network.
+2. Download [`TapoDeck-0.2.17.2.streamDeckPlugin`](releases/TapoDeck-0.2.17.2.streamDeckPlugin).
+3. Open the file and allow Stream Deck to install the plugin.
+4. Drag **Tapo Deck → Control a Tapo light** onto a key.
+5. Open the local setup page, select **Find Tapo lights**, then sign in locally.
+6. In the key's settings, choose one or more lights and configure the action. Use Stream Deck's own title field to name the key.
 
 The account sign-in is only for local bulb authentication. Set the bulbs up in the Tapo phone app before connecting them here.
 
 ## Build from source
 
-Builds currently target Windows. Python 3.11 is used for the release build. **Do not build or run a new installer from this source until the Defender detection has been investigated and the build has been reviewed.**
+Builds currently target Windows. Python 3.11 is used for the release build.
 
 ```powershell
 py -3.11 -m venv .venv

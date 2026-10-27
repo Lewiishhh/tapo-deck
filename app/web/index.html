@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="api-token" content="__API_TOKEN__">
   <meta name="theme-color" content="#f6f7fb">
-  <title>Tapo Deck · Local light control</title>
+  <title>Tapo Deck · Local setup</title>
   <link rel="stylesheet" href="/assets/styles.css">
   <script src="/assets/app.js" defer></script>
 </head>
@@ -15,75 +15,49 @@
       <div class="brand"><div class="brand-mark"><span></span><span></span><span></span></div><div><strong>Tapo Deck</strong><small>LOCAL LIGHT CONTROL</small></div></div>
       <div class="side-label">WORKSPACE</div>
       <nav class="primary-nav" aria-label="Primary navigation">
-        <button class="nav-item active" data-view="dashboard"><span class="nav-icon">◫</span><span>Dashboard</span><b>›</b></button>
-        <button class="nav-item" data-view="devices"><span class="nav-icon">◉</span><span>My lights</span><b>›</b></button>
-        <button class="nav-item" data-view="actions"><span class="nav-icon">✣</span><span>My actions</span><b>›</b></button>
-        <button class="nav-item" data-view="streamdeck"><span class="nav-icon">▦</span><span>Stream Deck</span><b>›</b></button>
+        <button class="nav-item active" data-view="setup"><span class="nav-icon">◉</span><span>Setup & lights</span><b>›</b></button>
       </nav>
-      <div class="side-label components-label">SETTINGS</div>
-      <nav class="primary-nav">
-        <button class="nav-item" data-view="security"><span class="nav-icon">◈</span><span>Privacy & account</span><b>›</b></button>
-        <button class="nav-item" data-view="about"><span class="nav-icon">ⓘ</span><span>About</span><b>›</b></button>
+      <div class="side-label components-label">INFORMATION</div>
+      <nav class="primary-nav" aria-label="Information">
+        <button class="nav-item" data-view="about"><span class="nav-icon">ⓘ</span><span>About & security</span><b>›</b></button>
       </nav>
-      <div class="sidebar-bottom"><div class="local-indicator"><span class="online-dot"></span><div><strong>Local connection</strong><small>Only on this PC and LAN</small></div></div><div class="build-label">TAPO DECK <span>0.2.16</span></div></div>
+      <div class="sidebar-bottom"><div class="local-indicator"><span class="online-dot"></span><div><strong>Local connection</strong><small>Only on this PC and LAN</small></div></div><div class="build-label">TAPO DECK <span id="buildVersion">0.2.17.2</span></div></div>
     </aside>
 
     <main class="main-area">
-      <header class="topbar"><div class="breadcrumb"><span>Workspace</span><b>/</b><strong id="pageCrumb">Dashboard</strong></div><div class="top-actions"><div class="network-pill"><span class="online-dot"></span><span>HOME NETWORK</span></div><button class="icon-button" id="refreshButton" title="Refresh light status" aria-label="Refresh light status">↻</button><div class="avatar">TD</div></div></header>
+      <header class="topbar"><div class="breadcrumb"><span>Tapo Deck</span><b>/</b><strong id="pageCrumb">Setup & lights</strong></div><div class="top-actions"><div class="network-pill"><span class="online-dot"></span><span id="networkStatus">LOCAL NETWORK</span></div><div class="avatar">TD</div></div></header>
 
       <div class="content-wrap">
-        <section class="view active" id="view-dashboard">
-          <div class="page-heading"><div><div class="eyebrow">YOUR HOME, AT A GLANCE</div><h1>Good to see you<span class="purple-period">.</span></h1><p>Manage your Tapo lights here, or bring them to your Stream Deck.</p></div><button class="primary-button" id="scanButton"><span>＋</span> Find lights</button></div>
-          <div class="stat-grid">
-            <article class="stat-card"><div class="stat-top"><span>Lights discovered</span><span class="stat-icon violet">✦</span></div><div class="stat-value" id="statDevices">0</div><div class="stat-foot"><span class="tiny-dot"></span><span>On your local network</span></div></article>
-            <article class="stat-card"><div class="stat-top"><span>Currently on</span><span class="stat-icon amber">☼</span></div><div class="stat-value" id="statOn">—</div><div class="stat-foot"><span>Live bulb status</span></div></article>
-            <article class="stat-card"><div class="stat-top"><span>Connection</span><span class="stat-icon mint">⌁</span></div><div class="stat-value stat-word" id="statConnection">Not connected</div><div class="stat-foot" id="statCredential">Sign in locally to control lights</div></article>
+        <section class="view active" id="view-setup">
+          <div class="page-heading"><div><div class="eyebrow">LOCAL SETUP</div><h1>Your Tapo lights<span class="purple-period">.</span></h1><p>Sign in locally, discover bulbs, and manage the saved sign-in for this PC.</p></div><button class="primary-button" id="scanButton"><span>＋</span> Find Tapo lights</button></div>
+          <div class="setup-layout">
+            <section class="panel login-panel" id="loginPanel">
+              <div class="panel-heading"><div><h2>Tapo account</h2><p>Used to authenticate directly with bulbs over your local network.</p></div><span class="security-mark">⌑</span></div>
+              <div class="preflight-note" id="setupPrereq"><strong>Before you begin</strong><p>Set up each bulb in the official Tapo phone app first. Keep the bulbs switched on at the wall switch while finding lights and signing in, and connect this PC and bulbs to the same Wi-Fi network. Enable Third-Party Compatibility in the Tapo app if prompted.</p></div>
+              <form id="loginForm" class="login-form" autocomplete="off">
+                <label>Account email<input id="usernameInput" name="tapo-local-account" type="email" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="you@example.com" required></label>
+                <label>Password<input id="passwordInput" name="tapo-local-password" type="password" autocomplete="new-password" placeholder="Tapo account password" required></label>
+                <p class="privacy-copy"><strong>Where it goes:</strong> your credentials are used from this PC for local bulb authentication, then stored encrypted with Windows DPAPI. Tapo Deck does not send them to its own cloud or telemetry service. The bulbs receive the local authentication exchange.</p>
+                <button class="primary-button full-width" type="submit">Secure local sign-in</button>
+                <div class="form-message" id="loginMessage" role="status"></div>
+              </form>
+              <div class="saved-credential hidden" id="savedCredential"><span class="online-dot"></span><span>Saved sign-in is encrypted on this PC</span><button id="logoutButton" class="text-button danger-text" type="button">Remove credentials</button></div>
+            </section>
+
+            <section class="panel lights-panel" aria-labelledby="lightsHeading">
+              <div class="panel-heading"><div><h2 id="lightsHeading">Found Tapo lights</h2><p id="scanMessage">Ready to find lights on your local network.</p></div><span class="count-badge" id="foundCount">0 found</span></div>
+              <div class="device-list" id="deviceList"><div class="empty-card"><div class="empty-illustration">✦</div><strong>No lights found yet</strong><p>Switch the bulbs on, then select Find Tapo lights.</p></div></div>
+            </section>
           </div>
-
-          <div class="section-heading"><div><h2>Your lights</h2><p>Discovered devices on this network</p></div><button class="text-button" data-nav="devices">View all <span>→</span></button></div>
-          <div class="device-grid" id="deviceGrid"><div class="empty-card"><div class="empty-illustration">✦</div><strong>No lights found yet</strong><p>Scan your home network to find compatible Tapo devices.</p><button class="secondary-button" id="emptyScanButton">Scan network</button></div></div>
-
-          <div class="dashboard-columns">
-            <section class="panel quick-panel"><div class="panel-heading"><div><h2>Quick controls</h2><p>Change the whole room in one tap</p></div><span class="panel-kicker">ROOM</span></div><div class="quick-actions"><button class="quick-action" data-action="on"><span class="quick-icon warm">☼</span><span><strong>Lights on</strong><small>Turn on together</small></span><b>→</b></button><button class="quick-action" data-action="off"><span class="quick-icon quiet">◌</span><span><strong>Lights off</strong><small>Turn off together</small></span><b>→</b></button><button class="quick-action" data-action="toggle"><span class="quick-icon violet">↻</span><span><strong>Toggle room</strong><small>Switch both lights</small></span><b>→</b></button></div></section>
-            <section class="panel privacy-card"><div class="privacy-icon">⌑</div><div><div class="eyebrow">PRIVATE BY DESIGN</div><h2>Your account stays here</h2><p>Sign-in is used for local bulb authentication. Your credentials are encrypted on this PC and are not sent to a cloud service by Tapo Deck.</p><button class="text-button" data-nav="security">Privacy details <span>→</span></button></div></section>
-          </div>
-        </section>
-
-        <section class="view" id="view-devices">
-          <div class="page-heading"><div><div class="eyebrow">LOCAL NETWORK</div><h1>My lights<span class="purple-period">.</span></h1><p>Discover bulbs and check their current state.</p></div><button class="primary-button" id="scanButtonDevices"><span>＋</span> Scan network</button></div>
-          <div class="toolbar"><label class="target-field"><span>Network broadcast</span><input id="targetInput" value="255.255.255.255" aria-label="Network broadcast address"></label><span class="toolbar-note" id="scanMessage">Ready to scan</span></div>
-          <div class="device-list" id="deviceList"></div>
-        </section>
-
-        <section class="view" id="view-actions">
-          <div class="page-heading"><div><div class="eyebrow">MAKE IT YOURS</div><h1>My actions<span class="purple-period">.</span></h1><p>Build useful presets for your room and send them to a Stream Deck key.</p></div></div>
-          <div class="action-layout"><section class="panel builder-panel"><div class="panel-heading"><div><h2>Create a preset</h2><p>Choose what one tap should do</p></div><span class="step-badge">01</span></div>
-            <form id="presetForm" class="preset-form">
-              <label>Button name<input id="presetName" maxlength="28" placeholder="e.g. Movie night" required></label>
-              <label>Lights<select id="presetDevice"><option value="both">Both room lights</option></select></label>
-              <label>Action<select id="presetAction"><option value="on">Turn on</option><option value="off">Turn off</option><option value="toggle">Toggle</option><option value="brightness">Set brightness</option><option value="temperature">Set white temperature</option><option value="color">Set color</option></select></label>
-              <div class="action-parameter" id="brightnessParameter"><label>Brightness <span id="brightnessValue">50%</span><input id="brightnessSlider" type="range" min="1" max="100" value="50"></label><div class="range-ticks"><span>1%</span><span>100%</span></div></div>
-              <div class="action-parameter hidden" id="temperatureParameter"><label>White temperature<select id="temperatureSelect"><option value="2700">Warm · 2700 K</option><option value="4000" selected>Neutral · 4000 K</option><option value="6500">Cool · 6500 K</option></select></label></div>
-              <div class="action-parameter hidden" id="colorParameter"><label>Color<input id="colorPicker" type="color" value="#5265d8"></label><label class="small-label">Color brightness<input id="colorBrightness" type="range" min="1" max="100" value="75"></label></div>
-              <button class="primary-button full-width" type="submit">＋ Save preset</button>
-            </form>
-          </section><section class="panel saved-panel"><div class="panel-heading"><div><h2>Saved presets</h2><p>Use them here or assign them in Stream Deck</p></div><span class="count-badge" id="presetCount">0</span></div><div class="preset-list" id="presetList"><div class="empty-note">Your saved presets will appear here.</div></div></section></div>
-        </section>
-
-        <section class="view" id="view-streamdeck">
-          <div class="page-heading"><div><div class="eyebrow">YOUR CONTROL SURFACE</div><h1>Stream Deck<span class="purple-period">.</span></h1><p>Drag Tapo Deck actions from Stream Deck’s actions panel onto a key, then configure that key.</p></div><div class="deck-symbol">▦</div></div>
-          <div class="deck-steps"><article class="step-card"><span class="step-number">01</span><div class="step-icon">⇩</div><h3>Install the plugin</h3><p>Install the Tapo Deck plugin package. Its actions will appear in the Stream Deck action list.</p><span class="status-tag pending" id="pluginStatus">PLUGIN PACKAGE AVAILABLE</span></article><article class="step-card"><span class="step-number">02</span><div class="step-icon">⠿</div><h3>Drag an action to a key</h3><p>Choose Power, Brightness, White Temperature, or Color. Drag it onto any key.</p></article><article class="step-card"><span class="step-number">03</span><div class="step-icon">⚙</div><h3>Customize it</h3><p>Pick the lights and settings in the action panel. Your choice stays with that key.</p></article></div>
-          <section class="panel deck-note"><div class="deck-note-mark">i</div><div><strong>Local bridge</strong><p>The companion app must be running while the Stream Deck actions are used. Both communicate only with this PC’s local service and your bulbs.</p></div></section>
-        </section>
-
-        <section class="view" id="view-security">
-          <div class="page-heading"><div><div class="eyebrow">ACCOUNT & PRIVACY</div><h1>Local sign-in<span class="purple-period">.</span></h1><p>Connect this PC to your Tapo bulbs.</p></div></div>
-          <div class="security-layout"><section class="panel login-panel" id="loginPanel"><div class="panel-heading"><div><h2>Tapo account</h2><p>Used to authenticate directly with bulbs over your local network.</p></div><span class="security-mark">⌑</span></div><div class="preflight-note" id="setupPrereq"><strong>Before you sign in</strong><p>Add each bulb in the Tapo phone app and finish its setup first. Make sure the bulbs and this PC are on the same Wi-Fi network. Enable Third-Party Compatibility in the Tapo app if prompted.</p><p>After setup, use <strong>Find lights</strong> on the My lights page to discover them here.</p></div><form id="loginForm" class="login-form"><label>Account email<input id="usernameInput" type="email" autocomplete="username" placeholder="you@example.com" required></label><label>Password<input id="passwordInput" type="password" autocomplete="current-password" placeholder="Tapo account password" required></label><p class="privacy-copy"><strong>Where it goes:</strong> your credentials are used from this PC for local bulb authentication, then stored encrypted with Windows DPAPI. Tapo Deck does not send them to a cloud service or telemetry endpoint. The bulb receives the local authentication exchange.</p><button class="primary-button full-width" type="submit">Secure local sign-in</button><div class="form-message" id="loginMessage" role="status"></div></form></section>
-          <section class="panel security-details"><div class="eyebrow">HOW IT WORKS</div><h2>Private by design</h2><div class="security-row"><span class="check-mark">✓</span><div><strong>Encrypted on this PC</strong><p>Windows encrypts the saved credential for your Windows account.</p></div></div><div class="security-row"><span class="check-mark">✓</span><div><strong>Direct local control</strong><p>Light commands travel over your home network to the selected bulb.</p></div></div><div class="security-row"><span class="check-mark">✓</span><div><strong>No account upload</strong><p>The app has no cloud login or analytics service.</p></div></div><div class="saved-credential hidden" id="savedCredential"><span class="online-dot"></span><span>Credentials are saved on this PC</span><button id="logoutButton" class="text-button danger-text">Remove</button></div></section></div>
         </section>
 
         <section class="view" id="view-about">
-          <div class="page-heading"><div><div class="eyebrow">ABOUT</div><h1>Tapo Deck<span class="purple-period">.</span></h1><p>A local-first Stream Deck plugin for Tapo smart lights.</p></div></div><section class="panel about-panel"><div class="about-logo">✦</div><h2>Built for your home setup</h2><p>Discover compatible bulbs, authenticate locally, and control power, brightness, white temperature, and color from customizable Stream Deck keys. The bundled engine uses python-kasa and runs on this PC while the plugin is active.</p><div class="about-version">Version 0.2.16 · Windows · Local network only</div></section>
+          <div class="page-heading"><div><div class="eyebrow">ABOUT THIS PLUGIN</div><h1>Tapo Deck<span class="purple-period">.</span></h1><p>A local-first Stream Deck plugin for TP-Link Tapo smart bulbs.</p></div><div class="version-badge">Version <strong id="aboutVersion">0.2.17.2</strong></div></div>
+          <div class="about-grid">
+            <section class="panel about-info-panel"><div class="about-logo">✦</div><div class="eyebrow">WHAT IT DOES</div><h2>Light control from your keys</h2><p>Find supported Tapo bulbs on your home network, sign in locally, then assign Stream Deck keys to one or more selected bulbs. Keys can turn lights on or off, toggle them, set brightness or white temperature, and choose a color while preserving current brightness.</p><p>The plugin includes its local engine. It runs on this PC when Stream Deck needs it, so there is no separate companion app to keep open.</p></section>
+            <section class="panel about-info-panel"><div class="security-mark about-security-mark">⌑</div><div class="eyebrow">SECURITY & DATA</div><h2>Designed to stay local</h2><div class="security-row"><span class="check-mark">✓</span><div><strong>Credentials stay on this PC</strong><p>Windows DPAPI encrypts the saved Tapo sign-in for your Windows account. Tapo Deck sends it directly to bulbs for local authentication.</p></div></div><div class="security-row"><span class="check-mark">✓</span><div><strong>No Tapo Deck cloud or telemetry</strong><p>The plugin has no project-operated cloud, analytics, advertising, or remote-control relay. Device discovery and commands use your local network.</p></div></div><div class="security-row"><span class="check-mark">✓</span><div><strong>Local engine connection</strong><p>The helper listens on this PC only and uses a temporary authorization token. It stops when the Stream Deck plugin closes.</p></div></div><p class="security-footnote">TP-Link's official Tapo app and any services it uses are operated separately by TP-Link and are outside Tapo Deck's control. Set up bulbs in the official phone app first.</p></section>
+          </div>
+          <div class="about-credit">Created by the project author with AI coding assistance for transparency. <span class="about-version">Version <strong id="aboutVersionFooter">0.2.17.2</strong> · Windows · Local network only</span></div>
         </section>
       </div>
     </main>

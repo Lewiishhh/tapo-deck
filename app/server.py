@@ -171,8 +171,18 @@ async def _validate_and_save(username: str, password: str) -> tuple[bool, str]:
             save_devices(list(DEVICES.values()))
             return True, "Signed in locally and verified against a bulb."
         except Exception as exc:
-            errors.append(type(exc).__name__)
-    return False, "Could not authenticate with a discovered bulb. Check the Tapo account details and Third-Party Compatibility setting."
+            # Return enough local diagnostic detail to distinguish an auth
+            # rejection from a transport/device error, while never echoing
+            # the submitted credentials back into the setup page.
+            detail = " ".join(str(exc).split())
+            if username:
+                detail = detail.replace(username, "[email redacted]")
+            if password:
+                detail = detail.replace(password, "[password redacted]")
+            detail = detail[:180]
+            errors.append(f"{ip}: {type(exc).__name__}" + (f" — {detail}" if detail else ""))
+    details = "; ".join(errors[:3])
+    return False, "Could not authenticate with a discovered bulb. Check the Tapo account details and Third-Party Compatibility setting." + (f" Details: {details}" if details else "")
 
 
 async def _apply_control(ip: str, credentials: Credentials, action: str, params: dict[str, Any]) -> dict[str, Any]:
@@ -209,6 +219,8 @@ async def _apply_control(ip: str, credentials: Credentials, action: str, params:
                 saturation = int(params.get("saturation", 100))
                 if not device.is_on:
                     await device.turn_on()
+                # Leave HSV value (brightness) unset so the bulb keeps its
+                # current brightness when only its color is changed.
                 await light.set_hsv(hue, saturation)
             else:
                 raise ValueError("Unsupported action")
@@ -306,7 +318,7 @@ class Handler(BaseHTTPRequestHandler):
                 "presets": load_presets(),
                 "broadcast": detected_broadcast(),
                 "setupPageOpened": setup_page_opened(),
-                "version": "0.2.16",
+                "version": "0.2.17.2",
             })
         if parsed.path == "/api/presets":
             return self._json(200, {"presets": load_presets()})

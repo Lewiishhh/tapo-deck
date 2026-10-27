@@ -142,6 +142,17 @@
     return {hue:Math.round(h),saturation:max?Math.round(d/max*100):0};
   }
 
+  function hsvToHex(hue, saturation) {
+    const h = ((Number(hue) % 360) + 360) % 360;
+    const s = Math.min(100, Math.max(0, Number(saturation))) / 100;
+    const chroma = s;
+    const x = chroma * (1 - Math.abs((h / 60) % 2 - 1));
+    const sector = Math.floor(h / 60);
+    const rgb = sector === 0 ? [chroma, x, 0] : sector === 1 ? [x, chroma, 0] : sector === 2 ? [0, chroma, x] : sector === 3 ? [0, x, chroma] : sector === 4 ? [x, 0, chroma] : [chroma, 0, x];
+    const offset = 1 - chroma;
+    return `#${rgb.map(channel => Math.round((channel + offset) * 255).toString(16).padStart(2, "0")).join("")}`;
+  }
+
   function renderDevices() {
     const list = $("deviceList");
     list.replaceChildren();
@@ -188,9 +199,11 @@
     if (settings.action === "brightness") $("value").value = settings.value ?? 50;
     if (settings.action === "temperature") $("temperature").value = settings.value ?? 4000;
     if (settings.action === "color") {
-      const option = `${settings.hue ?? 210},${settings.saturation ?? 100}`;
+      const hue = settings.hue ?? 210;
+      const saturation = settings.saturation ?? 100;
+      const option = `${hue},${saturation}`;
       if ([...$("colorPreset").options].some(o => o.value === option)) $("colorPreset").value = option;
-      else { $("colorPreset").value = "custom"; $("customColor").value = "#5265d8"; }
+      else { $("colorPreset").value = "custom"; $("customColor").value = hsvToHex(hue, saturation); }
     }
     updateFields();
     updateValueText();
