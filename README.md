@@ -6,7 +6,7 @@ Tapo Deck is a Windows Stream Deck plugin with its local control engine included
 
 > **Current release: 0.2.17.2** — [Download the Stream Deck installer](releases/TapoDeck-0.2.17.2.streamDeckPlugin)
 
-> **Security notice:** The v0.2.18 installer was withdrawn after Microsoft Defender detected it. Do not install or run any copy of v0.2.18.
+> **Security notice:** The v0.2.18 installer was withdrawn after Microsoft Defender falsely flagged the new build. Do not install or run any copy of v0.2.18 if you had/have access too it, it should have also been removed from this repo.
 
 ## What it can do
 
@@ -14,7 +14,7 @@ Tapo Deck is a Windows Stream Deck plugin with its local control engine included
 - Sign in locally and save credentials encrypted for your Windows account.
 - Configure each key to control one or more selected bulbs.
 - Create keys for on, off, toggle, brightness, white temperature, and color.
-- Set brightness values from 1% to 100%, choose a color temperature, or use a color preset/custom color.
+- Set brightness values from 1% to 100%, choose a colour temperature, or use a colour preset/custom colour. (Custom colours are only available for multicolour bulbs, the options are still there regardless but they just wont change outside of the normal warm to cool light boundary.
 - Color keys change hue and saturation while preserving each bulb's current brightness.
 - Use the bundled local setup page to sign in, find lights, and view their reachability.
 - Keep each key's device selection and settings with that key, including its title in Stream Deck.
