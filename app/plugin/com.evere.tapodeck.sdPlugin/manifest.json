@@ -29,7 +29,7 @@
   "Nodejs": { "Version": "24" },
   "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
   "UUID": "com.evere.tapodeck",
-  "Version": "0.2.16.0",
+  "Version": "0.2.18.0",
   "SDKVersion": 2,
   "Software": { "MinimumVersion": "7.1" }
 }

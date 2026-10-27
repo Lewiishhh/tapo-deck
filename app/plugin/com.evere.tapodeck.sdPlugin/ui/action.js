@@ -188,10 +188,9 @@
     if (settings.action === "brightness") $("value").value = settings.value ?? 50;
     if (settings.action === "temperature") $("temperature").value = settings.value ?? 4000;
     if (settings.action === "color") {
-      const option = `${settings.hue ?? 210},${settings.saturation ?? 100},${settings.value ?? 75}`;
+      const option = `${settings.hue ?? 210},${settings.saturation ?? 100}`;
       if ([...$("colorPreset").options].some(o => o.value === option)) $("colorPreset").value = option;
       else { $("colorPreset").value = "custom"; $("customColor").value = "#5265d8"; }
-      $("colorValue").value = settings.value ?? 75;
     }
     updateFields();
     updateValueText();
@@ -208,7 +207,6 @@
 
   function updateValueText() {
     $("valueText").textContent = `${$("value").value}%`;
-    $("colorText").textContent = `${$("colorValue").value}%`;
   }
 
   function currentSettings() {
@@ -226,7 +224,6 @@
         settings.saturation = saturation;
         settings.colorName = $("colorPreset").selectedOptions[0].textContent;
       }
-      settings.value = Number($("colorValue").value);
     }
     return settings;
   }
@@ -256,7 +253,6 @@
   $("value").addEventListener("input", () => { updateValueText(); saveSettings(); });
   $("temperature").addEventListener("change", saveSettings);
   $("customColor").addEventListener("input", saveSettings);
-  $("colorValue").addEventListener("input", () => { updateValueText(); saveSettings(); });
   $("refresh").addEventListener("click", async () => {
     try {
       const data = await localRequest("/api/bootstrap");

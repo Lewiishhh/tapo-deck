@@ -207,10 +207,9 @@ async def _apply_control(ip: str, credentials: Credentials, action: str, params:
             elif action == "color":
                 hue = int(params.get("hue", 210))
                 saturation = int(params.get("saturation", 100))
-                value = int(params.get("value", 75))
                 if not device.is_on:
                     await device.turn_on()
-                await light.set_hsv(hue, saturation, value)
+                await light.set_hsv(hue, saturation)
             else:
                 raise ValueError("Unsupported action")
         return {"ip": ip, "ok": True, "state": "on" if action == "on" else "off" if action == "off" else None}

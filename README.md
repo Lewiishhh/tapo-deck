@@ -2,9 +2,9 @@
 
 **Control TP-Link Tapo smart bulbs from Elgato Stream Deck, directly over your home network.**
 
-Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source is published here, and the current standalone plugin installer is included under [`releases/`](releases/TapoDeck-0.2.16.streamDeckPlugin).
+Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source is published here, and the current standalone plugin installer is included under [`releases/`](releases/TapoDeck-0.2.18.streamDeckPlugin).
 
-> **Current release: 0.2.16** — [Download the Stream Deck installer](releases/TapoDeck-0.2.16.streamDeckPlugin)
+> **Current release: 0.2.18** — [Download the Stream Deck installer](releases/TapoDeck-0.2.18.streamDeckPlugin)
 
 ## What it can do
 
@@ -12,7 +12,7 @@ Tapo Deck is a Windows Stream Deck plugin with its local control engine included
 - Sign in locally and save credentials encrypted for your Windows account.
 - Configure each key to control one or more selected bulbs.
 - Create keys for on, off, toggle, brightness, white temperature, and color.
-- Set brightness values from 1% to 100%, choose a color temperature, or use a color preset/custom color.
+- Set brightness values from 1% to 100%, choose a color temperature, or use a color preset/custom color. Color actions change the color while preserving each bulb's current brightness.
 - Use the bundled local setup page to discover lights, check their status, and create or manage presets.
 - Keep each key's device selection and settings with that key, including its title in Stream Deck.
 
@@ -43,7 +43,7 @@ You do **not** need to install Python, Node.js, or a separate Tapo Deck desktop 
 
 ## Install
 
-1. Download [`TapoDeck-0.2.16.streamDeckPlugin`](releases/TapoDeck-0.2.16.streamDeckPlugin).
+1. Download [`TapoDeck-0.2.18.streamDeckPlugin`](releases/TapoDeck-0.2.18.streamDeckPlugin).
 2. Open the file and allow Stream Deck to install the plugin.
 3. Drag **Tapo Deck → Control a Tapo light** onto a key.
 4. Open the key's settings, use the local setup page to sign in and find your bulbs, then choose the bulb or bulbs for that key.

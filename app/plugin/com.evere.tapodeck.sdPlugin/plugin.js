@@ -205,7 +205,6 @@ async function activate(context, settings = {}, key = "") {
   if (action === "color") {
     params.hue = Number(settings.hue ?? 210);
     params.saturation = Number(settings.saturation ?? 100);
-    params.value = Number(settings.value ?? 75);
   }
   try {
     await ensureService();
