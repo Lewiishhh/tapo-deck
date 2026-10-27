@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" href="action.css">
+</head>
+<body>
+  <main class="inspector">
+    <div class="header"><div class="mark">✦</div><div><strong>Tapo Deck</strong><small>KEY SETTINGS</small></div><button id="refresh" title="Refresh discovered lights">↻</button></div>
+    <div class="service" id="service"><span class="dot"></span><span>Starting the built-in light engine…</span></div>
+    <div class="progress" id="progress" aria-live="polite"></div>
+    <section class="device-picker">
+      <div class="picker-heading">Lights to control</div>
+      <div id="deviceList" class="device-list"><div class="empty-devices">Open local setup to sign in and discover lights.</div></div>
+      <div class="selection-hint">Select one or more lights for this key.</div>
+    </section>
+    <label>Action<select id="action"><option value="toggle">Toggle power</option><option value="on">Turn on</option><option value="off">Turn off</option><option value="brightness">Set brightness</option><option value="temperature">Set white temperature</option><option value="color">Set color</option></select></label>
+    <label id="valueRow">Value <span id="valueText">50%</span><input id="value" type="range" min="1" max="100" value="50"></label>
+    <label id="temperatureRow" class="hidden">White temperature<select id="temperature"><option value="2700">Warm · 2700 K</option><option value="4000" selected>Neutral · 4000 K</option><option value="6500">Cool · 6500 K</option></select></label>
+    <div id="colorRow" class="hidden">
+      <label>Color preset<select id="colorPreset"><option value="0,100,75">Red</option><option value="30,100,75">Orange</option><option value="60,100,75">Yellow</option><option value="120,100,75">Green</option><option value="180,100,75">Cyan</option><option value="240,100,75">Blue</option><option value="275,100,75">Purple</option><option value="330,100,75">Pink</option><option value="custom">Choose a custom color…</option></select></label>
+      <label id="customColorRow" class="hidden">Custom color<input id="customColor" type="color" value="#5265d8"></label>
+      <label>Color brightness <span id="colorText">75%</span><input id="colorValue" type="range" min="1" max="100" value="75"></label>
+    </div>
+    <div class="hint" id="hint">Choose lights and an action. Press this key to run it.</div>
+    <div class="setup-actions">
+      <button class="secondary" id="openSetup" type="button">Open local setup page</button>
+      <button class="text-action" id="signOut" type="button">Remove saved Tapo sign-in</button>
+    </div>
+  </main>
+  <script src="action.js"></script>
+</body>
+</html>

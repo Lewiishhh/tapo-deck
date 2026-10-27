@@ -1,0 +1,35 @@
+{
+  "$schema": "https://schemas.elgato.com/streamdeck/plugins/manifest.json",
+  "Actions": [
+    {
+      "Name": "Control a Tapo light",
+      "UUID": "com.evere.tapodeck.control",
+      "Icon": "imgs/action",
+      "Tooltip": "Choose discovered Tapo lights and configure their Stream Deck controls.",
+      "Controllers": ["Keypad"],
+      "PropertyInspectorPath": "ui/action.html",
+      "States": [
+        {
+          "Image": "imgs/key",
+          "Title": "Tapo",
+          "TitleColor": "#ffffff",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    }
+  ],
+  "Author": "Tapo Deck",
+  "Category": "Tapo Deck",
+  "CategoryIcon": "imgs/category",
+  "CodePath": "plugin.js",
+  "Description": "An all-in-one Stream Deck plugin with a bundled local engine for Tapo lights.",
+  "Icon": "imgs/plugin",
+  "Name": "Tapo Deck",
+  "Nodejs": { "Version": "24" },
+  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "UUID": "com.evere.tapodeck",
+  "Version": "0.2.16.0",
+  "SDKVersion": 2,
+  "Software": { "MinimumVersion": "7.1" }
+}

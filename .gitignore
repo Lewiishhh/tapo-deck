@@ -1,0 +1,20 @@
+# Generated files and private/local data
+.venv/
+__pycache__/
+*.py[cod]
+app/build/
+app/dist/
+app/TapoDeck.spec
+app/plugin/com.evere.tapodeck.sdPlugin/bin/TapoDeckService.exe
+app/plugin/com.evere.tapodeck.sdPlugin/LICENSE
+app/plugin/com.evere.tapodeck.sdPlugin/THIRD_PARTY_NOTICES.md
+app/plugin/com.evere.tapodeck.sdPlugin/THIRD_PARTY_LICENSES/
+.env
+.env.*
+*.credentials
+credentials.bin
+api_token
+devices.json
+presets.json
+key_settings.json
+tapo_control.log
