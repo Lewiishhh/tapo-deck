@@ -2,9 +2,9 @@
 
 **Control TP-Link Tapo smart bulbs from Elgato Stream Deck, directly over your home network.**
 
-Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source is published here, and the current standalone plugin installer is included under [`releases/`](releases/TapoDeck-0.2.18.streamDeckPlugin).
+Tapo Deck is a Windows Stream Deck plugin with its local control engine included. There is no separate companion app to install or keep open. The source remains available here. The v0.2.18 standalone installer has been withdrawn while we investigate a Microsoft Defender detection; do not run copies of that build.
 
-> **Current release: 0.2.18** — [Download the Stream Deck installer](releases/TapoDeck-0.2.18.streamDeckPlugin)
+> **Installer withdrawn:** Do not install v0.2.18. No standalone installer is currently provided.
 
 ## What it can do
 
@@ -43,17 +43,13 @@ You do **not** need to install Python, Node.js, or a separate Tapo Deck desktop 
 
 ## Install
 
-1. Download [`TapoDeck-0.2.18.streamDeckPlugin`](releases/TapoDeck-0.2.18.streamDeckPlugin).
-2. Open the file and allow Stream Deck to install the plugin.
-3. Drag **Tapo Deck → Control a Tapo light** onto a key.
-4. Open the key's settings, use the local setup page to sign in and find your bulbs, then choose the bulb or bulbs for that key.
-5. Choose the action and its settings. Use Stream Deck's own title field to name the key.
+The v0.2.18 installer was withdrawn after Microsoft Defender detected it. Do not run any copy of that build. No standalone installer is currently available; install instructions will return only after a new build has been investigated and verified.
 
 The account sign-in is only for local bulb authentication. Set the bulbs up in the Tapo phone app before connecting them here.
 
 ## Build from source
 
-Builds currently target Windows. Python 3.11 is used for the release build.
+Builds currently target Windows. Python 3.11 is used for the release build. **Do not build or run a new installer from this source until the Defender detection has been investigated and the build has been reviewed.**
 
 ```powershell
 py -3.11 -m venv .venv
