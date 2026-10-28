@@ -8,11 +8,38 @@
   let selectedDevices = new Set();
   let signedIn = false;
   let saveTimer = null;
+  let saveChain = Promise.resolve();
+  let localSettingsLoaded = false;
+  let streamDeckSettings = null;
   let enginePort = 0;
   let engineToken = "";
   let setupUrl = "";
   let keyId = "";
   let settingsReady = false;
+  let saveSequence = 0;
+  const fixedModes = {
+    "com.evere.tapodeck.toggle": "toggle",
+    "com.evere.tapodeck.brightness": "brightness",
+    "com.evere.tapodeck.color": "color",
+    "com.evere.tapodeck.temperature": "temperature",
+  };
+  const actionNames = {
+    "com.evere.tapodeck.control": "CUSTOM CONTROL",
+    "com.evere.tapodeck.toggle": "POWER TOGGLE",
+    "com.evere.tapodeck.brightness": "BRIGHTNESS",
+    "com.evere.tapodeck.color": "COLOUR",
+    "com.evere.tapodeck.temperature": "WHITE TEMPERATURE",
+  };
+
+  function currentMode() {
+    return fixedModes[action] || $("action").value;
+  }
+
+  function configureActionType() {
+    $("actionModeRow").classList.toggle("hidden", !!fixedModes[action]);
+    $("actionKind").textContent = actionNames[action] || "KEY SETTINGS";
+    updateFields();
+  }
 
   async function localRequest(path, body, timeout = 30000) {
     if (!enginePort || !engineToken) throw new Error("The built-in local engine is still connecting. Reopen this key’s settings and try again.");
@@ -65,27 +92,45 @@
     try { message = JSON.parse(event.data); } catch { return; }
     const payload = message.payload || {};
     if (message.event === "sendToPropertyInspector" && payload.type === "bootstrap") {
-      // Use the context supplied for this visible inspector. Native settings
-      // notifications can arrive late after a panel switches keys.
-      if (typeof payload.context === "string" && payload.context) context = payload.context;
+      // Keep the context supplied by Stream Deck's actionInfo. A context
+      // echoed through sendToPropertyInspector can belong to a stale panel;
+      // sending it back causes Stream Deck to reject sendToPlugin as wrong-context.
       if (typeof payload.action === "string") action = payload.action;
+      configureActionType();
       enginePort = Number(payload.enginePort) || 0;
       engineToken = typeof payload.engineToken === "string" ? payload.engineToken : "";
       setupUrl = typeof payload.setupUrl === "string" ? payload.setupUrl : "";
+      keyId = typeof payload.keyId === "string" ? payload.keyId : "";
       devices = payload.devices || [];
       signedIn = !!payload.authenticated;
       renderDevices();
       setConnectionStatus(payload.appRunning ? (signedIn ? `${devices.length} saved light${devices.length === 1 ? "" : "s"} · ready` : "Setup required · open local setup page") : (payload.error || "Starting built-in local engine…"), !payload.appRunning);
+      if (payload.appRunning && keyId && !localSettingsLoaded) {
+        void localRequest(`/api/key-settings?key=${encodeURIComponent(keyId)}`).then(data => {
+          if (data.settings) applySettings(data.settings);
+          else if (streamDeckSettings) applySettings(streamDeckSettings);
+          localSettingsLoaded = true;
+          settingsReady = true;
+          $("saveStatus").textContent = "Settings save locally on this PC.";
+        }).catch(error => {
+          $("saveStatus").textContent = "Could not load this key’s local settings.";
+          report(error.message, true);
+        });
+      }
     }
     if (message.event === "sendToPropertyInspector" && payload.type === "progress") {
+      if (payload.saveId && payload.saveId !== saveSequence) return;
       report(payload.message, !!payload.error);
-      if (payload.saved) { clearTimeout(saveTimer); report("Key settings saved."); }
     }
     if (message.event === "sendToPropertyInspector" && payload.type === "service") setConnectionStatus(payload.error || (payload.appRunning ? "Local engine ready" : "Starting built-in local engine…"), !payload.appRunning);
     if (message.event === "sendToPropertyInspector" && payload.type === "settings") {
       keyId = typeof payload.keyId === "string" ? payload.keyId : "";
-      applySettings(payload.settings || {});
-      settingsReady = true;
+      const receivedSettings = payload.settings || {};
+      streamDeckSettings = receivedSettings;
+      if (localSettingsLoaded) return;
+      // The local store is loaded after bootstrap; retain this profile copy as
+      // a fallback for the first run, then let local storage take precedence.
+      applySettings(receivedSettings);
     }
   }
 
@@ -195,10 +240,11 @@
       selectedDevices = new Set();
     }
     renderDevices();
-    if (settings.action) $("action").value = settings.action;
-    if (settings.action === "brightness") $("value").value = settings.value ?? 50;
-    if (settings.action === "temperature") $("temperature").value = settings.value ?? 4000;
-    if (settings.action === "color") {
+    const mode = fixedModes[action] || settings.action;
+    if (settings.action && !fixedModes[action]) $("action").value = settings.action;
+    if (mode === "brightness") $("value").value = settings.value ?? 50;
+    if (mode === "temperature") $("temperature").value = settings.value ?? 4000;
+    if (mode === "color") {
       const hue = settings.hue ?? 210;
       const saturation = settings.saturation ?? 100;
       const option = `${hue},${saturation}`;
@@ -210,7 +256,7 @@
   }
 
   function updateFields() {
-    const mode = $("action").value;
+    const mode = currentMode();
     $("valueRow").classList.toggle("hidden", mode !== "brightness");
     $("temperatureRow").classList.toggle("hidden", mode !== "temperature");
     $("colorRow").classList.toggle("hidden", mode !== "color");
@@ -223,7 +269,7 @@
   }
 
   function currentSettings() {
-    const mode = $("action").value;
+    const mode = currentMode();
     const settings = { devices: [...selectedDevices], action: mode };
     if (mode === "brightness") settings.value = Number($("value").value);
     if (mode === "temperature") settings.value = Number($("temperature").value);
@@ -241,16 +287,38 @@
     return settings;
   }
 
-  function saveSettings() {
-    if (!settingsReady) return;
-    if (!keyId) { report("Could not identify this key for local saving. Reopen its settings.", true); return; }
+  function saveSettings(immediate = false) {
+    if (!settingsReady || !keyId) return;
+    const saveId = ++saveSequence;
     clearTimeout(saveTimer);
-    saveTimer = setTimeout(() => {
-      report("Saving this key’s settings on this PC…");
-      localRequest("/api/key-settings", { key: keyId, settings: currentSettings() }, 10000)
-        .then(() => report("This key’s settings were saved on this PC."))
-        .catch(error => report(error.name === "AbortError" ? "The local engine did not respond. Try changing this setting again." : error.message, true));
-    }, 300);
+    const commit = async () => {
+      if (saveId !== saveSequence) return;
+      const settings = currentSettings();
+      $("saveStatus").textContent = "Saving on this PC…";
+      report("");
+      const saveButton = $("saveSettings");
+      if (immediate && saveButton) saveButton.disabled = true;
+      try {
+        const request = saveChain.then(() => localRequest("/api/key-settings", { key: keyId, settings }));
+        saveChain = request.catch(() => {});
+        await request;
+        if (saveId !== saveSequence) return;
+        // Best effort mirror into the Stream Deck profile. Key execution uses
+        // the confirmed local copy above and does not depend on this response.
+        if (ws && ws.readyState === WebSocket.OPEN) {
+          try { ws.send(JSON.stringify({ event: "setSettings", action, context, payload: settings })); } catch { /* local save succeeded */ }
+        }
+        $("saveStatus").textContent = "Settings saved locally on this PC.";
+      } catch (error) {
+        if (saveId !== saveSequence) return;
+        $("saveStatus").textContent = "Settings could not be saved locally.";
+        report(error.name === "AbortError" ? "The local engine did not respond. Try saving again." : error.message, true);
+      } finally {
+        if (immediate && saveButton) saveButton.disabled = false;
+      }
+    };
+    if (immediate) void commit();
+    else saveTimer = setTimeout(commit, 300);
   }
 
   $("deviceList").addEventListener("change", event => {
@@ -264,8 +332,9 @@
   $("action").addEventListener("change", () => { updateFields(); saveSettings(); });
   $("colorPreset").addEventListener("change", () => { updateFields(); saveSettings(); });
   $("value").addEventListener("input", () => { updateValueText(); saveSettings(); });
-  $("temperature").addEventListener("change", saveSettings);
-  $("customColor").addEventListener("input", saveSettings);
+  $("temperature").addEventListener("change", () => saveSettings());
+  $("customColor").addEventListener("input", () => saveSettings());
+  $("saveSettings").addEventListener("click", () => saveSettings(true));
   $("refresh").addEventListener("click", async () => {
     try {
       const data = await localRequest("/api/bootstrap");
@@ -300,6 +369,6 @@
     }
     if (send({ event: "openUrl", payload: { url: setupUrl } })) report("Opening local Tapo setup in your browser…");
   });
-  updateFields();
+  configureActionType();
   updateValueText();
 })();

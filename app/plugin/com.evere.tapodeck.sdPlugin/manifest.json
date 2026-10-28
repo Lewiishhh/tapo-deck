@@ -6,7 +6,9 @@
       "UUID": "com.evere.tapodeck.control",
       "Icon": "imgs/action",
       "Tooltip": "Choose discovered Tapo lights and configure their Stream Deck controls.",
-      "Controllers": ["Keypad"],
+      "Controllers": [
+        "Keypad"
+      ],
       "PropertyInspectorPath": "ui/action.html",
       "States": [
         {
@@ -17,19 +19,106 @@
           "ShowTitle": true
         }
       ]
+    },
+    {
+      "Name": "Toggle Tapo power",
+      "UUID": "com.evere.tapodeck.toggle",
+      "Icon": "imgs/action",
+      "Tooltip": "Toggle the selected Tapo bulbs on or off.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "PropertyInspectorPath": "ui/action.html",
+      "States": [
+        {
+          "Image": "imgs/key",
+          "Title": "Toggle",
+          "TitleColor": "#ffffff",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "Name": "Set Tapo brightness",
+      "UUID": "com.evere.tapodeck.brightness",
+      "Icon": "imgs/action",
+      "Tooltip": "Set the brightness of selected Tapo bulbs.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "PropertyInspectorPath": "ui/action.html",
+      "States": [
+        {
+          "Image": "imgs/key",
+          "Title": "Brightness",
+          "TitleColor": "#ffffff",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "Name": "Set Tapo colour",
+      "UUID": "com.evere.tapodeck.color",
+      "Icon": "imgs/action",
+      "Tooltip": "Set a colour while preserving each bulb’s current brightness.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "PropertyInspectorPath": "ui/action.html",
+      "States": [
+        {
+          "Image": "imgs/key",
+          "Title": "Colour",
+          "TitleColor": "#ffffff",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
+    },
+    {
+      "Name": "Set Tapo white temperature",
+      "UUID": "com.evere.tapodeck.temperature",
+      "Icon": "imgs/action",
+      "Tooltip": "Set the white colour temperature of selected Tapo bulbs.",
+      "Controllers": [
+        "Keypad"
+      ],
+      "PropertyInspectorPath": "ui/action.html",
+      "States": [
+        {
+          "Image": "imgs/key",
+          "Title": "White temp",
+          "TitleColor": "#ffffff",
+          "TitleAlignment": "bottom",
+          "ShowTitle": true
+        }
+      ]
     }
   ],
-  "Author": "Tapo Deck",
-  "Category": "Tapo Deck",
+  "Author": "Lewiishhh",
+  "Category": "Tapo Deck Plugin",
   "CategoryIcon": "imgs/category",
-  "CodePath": "plugin.js",
-  "Description": "An all-in-one Stream Deck plugin with a bundled local engine for Tapo lights.",
+  "CodePath": "plugin.mjs",
+  "Description": "Tapo Deck Plugin is an unofficial Windows plugin for controlling compatible TP-Link Tapo smart bulbs from Elgato Stream Deck. Discover bulbs on the local network, authenticate locally, and configure keys for power, brightness, white temperature, and colour. The plugin includes its local engine and needs no companion app. Set up bulbs in the Tapo app first and keep them powered on. Credentials are encrypted with Windows DPAPI and used for local bulb authentication. Created by Lewiishhh with AI coding assistance.",
   "Icon": "imgs/plugin",
-  "Name": "Tapo Deck",
-  "Nodejs": { "Version": "24" },
-  "OS": [{ "Platform": "windows", "MinimumVersion": "10" }],
+  "Name": "Tapo Deck Plugin",
+  "Nodejs": {
+    "Version": "24"
+  },
+  "OS": [
+    {
+      "Platform": "windows",
+      "MinimumVersion": "10"
+    }
+  ],
   "UUID": "com.evere.tapodeck",
-  "Version": "0.2.17.2",
-  "SDKVersion": 2,
-  "Software": { "MinimumVersion": "7.1" }
+  "Version": "0.2.18.7",
+  "SDKVersion": 3,
+  "Software": {
+    "MinimumVersion": "7.1"
+  },
+  "SupportURL": "https://github.com/Lewiishhh/tapo-deck/issues",
+  "URL": "https://github.com/Lewiishhh/tapo-deck"
 }

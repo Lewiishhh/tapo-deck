@@ -1,6 +1,6 @@
 # Third-party notices
 
-The standalone Windows plugin bundles Python 3.11 and the runtime packages below. Their license texts are included in `THIRD_PARTY_LICENSES/` in this repository and inside the `.streamDeckPlugin` package.
+The standalone v0.2.18.7 Windows plugin bundles the Python runtime and the runtime packages below. Their license texts are included in `THIRD_PARTY_LICENSES/` in this repository and inside the `.streamDeckPlugin` package.
 
 | Component | Version | License |
 |---|---:|---|
@@ -19,14 +19,19 @@ The standalone Windows plugin bundles Python 3.11 and the runtime packages below
 | [multidict](https://pypi.org/project/multidict/7.2.1/) | 7.2.1 | Apache-2.0 |
 | [propcache](https://pypi.org/project/propcache/0.5.4/) | 0.5.4 | Apache-2.0 |
 | [pycparser](https://pypi.org/project/pycparser/3.12/) | 3.12 | BSD-3-Clause |
-| [typing_extensions](https://pypi.org/project/typing_extensions/4.16.0/) | 4.16.0 | PSF-2.0 |
+| [typing_extensions](https://pypi.org/project/typing-extensions/4.16.0/) | 4.16.0 | PSF-2.0 |
 | [tzdata](https://pypi.org/project/tzdata/2026.5/) | 2026.5 | Apache-2.0 |
 | [yarl](https://pypi.org/project/yarl/1.25.1/) | 1.25.1 | Apache-2.0 |
-
 | Python runtime | 3.11.9 | PSF-2.0 |
 
-The build uses PyInstaller. PyInstaller is a build tool and is not a runtime dependency in the plugin; its GPL license includes a special exception permitting distribution of programs built with it. See the PyInstaller project for its license and exception.
+The build uses PyInstaller. PyInstaller is a build tool, not a runtime dependency; its GPL license includes an exception permitting distribution of programs built with it. See the PyInstaller project for its license and exception.
 
 The `python-kasa` dependency is GPL-3.0-or-later. Tapo Deck is consequently released under GPL-3.0-or-later. See `LICENSE` for the full license text.
 
-These notices describe the versions used for release 0.2.17.2. Rebuilding with newer dependency versions may change the applicable notices.
+## Stream Deck SDK dependencies
+
+The plugin includes Elgato's official `@elgato/streamdeck` package version 2.1.2 and its runtime dependencies (`@elgato/utils`, `@elgato/schemas`, `ws`, and `zod`). These dependency license texts are included in `THIRD_PARTY_LICENSES/Node-SDK/` and in the plugin package.
+
+Zod is pinned to 4.6.7 through an npm override. This keeps the API used by the SDK (`zod/v4-mini`) while addressing the reported advisory affecting the transitive Zod 3 version.
+
+These notices describe the versions bundled for Tapo Deck Plugin 0.2.18.7. Rebuilding with different dependency versions may change the applicable notices.

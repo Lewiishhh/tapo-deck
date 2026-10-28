@@ -5,7 +5,7 @@
     authenticated: false,
     busy: false,
     broadcast: "255.255.255.255",
-    version: "0.2.17.2",
+    version: "0.2.18.3",
   };
   const $ = selector => document.querySelector(selector);
   const $$ = selector => [...document.querySelectorAll(selector)];

@@ -318,7 +318,7 @@ class Handler(BaseHTTPRequestHandler):
                 "presets": load_presets(),
                 "broadcast": detected_broadcast(),
                 "setupPageOpened": setup_page_opened(),
-                "version": "0.2.17.2",
+                "version": "0.2.18.3",
             })
         if parsed.path == "/api/presets":
             return self._json(200, {"presets": load_presets()})
